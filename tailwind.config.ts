@@ -23,6 +23,18 @@ const config: Config = {
       boxShadow: {
         'soft': '0 4px 14px 0 rgba(0, 0, 0, 0.05)', // Đổ bóng mềm
       },
+      animation: {
+        aurora: 'moveAurora 20s linear infinite',
+      },
+      keyframes: {
+        moveAurora: {
+          '0%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '25%': { transform: 'translate(20px, 40px) rotate(20deg)' },
+          '50%': { transform: 'translate(-20px, -40px) rotate(-20deg)' },
+          '75%': { transform: 'translate(40px, -20px) rotate(10deg)' },
+          '100%': { transform: 'translate(0, 0) rotate(0deg)' },
+        },
+      },
     },
   },
   plugins: [],
