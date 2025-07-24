@@ -1,7 +1,7 @@
 // app/(user)/generate/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import api from '@/lib/api';
 import type { Resolver } from "react-hook-form";
 import { useAuthStore } from '@/store/authStore';
+import { Combobox } from '@headlessui/react';
 
 
 
@@ -153,22 +154,53 @@ export default function GeneratePage() {
                                 <FormField
                                     control={form.control}
                                     name="goal"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
-                                                <FormControl>
-                                                    <SelectTrigger><SelectValue placeholder="Chọn mục tiêu của bạn" /></SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {goals.map((goal, index) => (
-                                                        <SelectItem key={index} value={goal}>{goal}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    render={({ field }) => {
+                                        const [query, setQuery] = useState(field.value || '');
+
+                                        const filteredGoals = useMemo(() => {
+                                            return goals.filter(goal => goal.toLowerCase().includes(query.toLowerCase()));
+                                        }, [query, goals]);
+
+                                        return (
+                                            <FormItem>
+                                                <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
+                                                <Combobox value={query} onChange={(val) => {
+                                                    setQuery(val ?? '');
+                                                    field.onChange(val ?? ''); // update react-hook-form value
+                                                }}>
+                                                    <div className="relative">
+                                                        <Combobox.Input
+                                                            className="w-full border rounded px-3 py-2"
+                                                            onChange={(e) => {
+                                                                setQuery(e.target.value);
+                                                                field.onChange(e.target.value);
+                                                            }}
+                                                            placeholder="Chọn hoặc nhập mục tiêu của bạn"
+                                                            value={query}
+                                                            disabled={isLoading}
+                                                        />
+
+                                                        {filteredGoals.length > 0 && query !== '' && (
+                                                            <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg z-10">
+                                                                {filteredGoals.map((goal, index) => (
+                                                                    <Combobox.Option
+                                                                        key={index}
+                                                                        value={goal}
+                                                                        className={({ active }) =>
+                                                                            `cursor-pointer select-none px-4 py-2 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'}`
+                                                                        }
+                                                                    >
+                                                                        {goal}
+                                                                    </Combobox.Option>
+                                                                ))}
+                                                            </Combobox.Options>
+                                                        )}
+                                                    </div>
+                                                </Combobox>
+                                                <FormMessage />
+                                            </FormItem>
+                                        );
+                                    }}
                                 />
 
                                 {/* === PHẦN NHẬP KỸ NĂNG ĐƯỢC THAY THẾ HOÀN TOÀN === */}
