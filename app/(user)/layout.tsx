@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 import Header from '@/components/layout/Header';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import VerificationBanner from '@/components/layout/VerificationBanner';
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -52,6 +53,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen bg-background text-text">
             <Header />
             <main className="p-4 sm:p-6 md:p-8">
+                {user && !user.is_verified && <VerificationBanner />}
                 {children}
             </main>
         </div>

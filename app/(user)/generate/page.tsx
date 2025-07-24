@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import api from '@/lib/api';
 import type { Resolver } from "react-hook-form";
+import { useAuthStore } from '@/store/authStore';
 
 
 
@@ -50,6 +51,7 @@ const parseSkills = (skillsString: string) => {
 
 
 export default function GeneratePage() {
+    const { user } = useAuthStore();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [goals, setGoals] = useState<string[]>([]);
@@ -144,119 +146,121 @@ export default function GeneratePage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            {/* Mục tiêu nghề nghiệp (Giữ nguyên) */}
-                            <FormField
-                                control={form.control}
-                                name="goal"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
-                                            <FormControl>
-                                                <SelectTrigger><SelectValue placeholder="Chọn mục tiêu của bạn" /></SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {goals.map((goal, index) => (
-                                                    <SelectItem key={index} value={goal}>{goal}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                    <fieldset disabled={!user?.is_verified}>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                {/* Mục tiêu nghề nghiệp (Giữ nguyên) */}
+                                <FormField
+                                    control={form.control}
+                                    name="goal"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                                                <FormControl>
+                                                    <SelectTrigger><SelectValue placeholder="Chọn mục tiêu của bạn" /></SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {goals.map((goal, index) => (
+                                                        <SelectItem key={index} value={goal}>{goal}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            {/* === PHẦN NHẬP KỸ NĂNG ĐƯỢC THAY THẾ HOÀN TOÀN === */}
-                            <div className="space-y-3">
-                                <FormLabel>Các kỹ năng bạn đã có</FormLabel>
-                                <div className="flex items-start gap-2">
-                                    <Input
-                                        placeholder="Tên kỹ năng (VD: React)"
-                                        value={currentSkillName}
-                                        onChange={(e) => setCurrentSkillName(e.target.value)}
-                                        className="flex-grow"
-                                        disabled={isLoading}
-                                    />
-                                    <Select
-                                        value={currentSkillLevel}
-                                        onValueChange={setCurrentSkillLevel}
-                                        disabled={isLoading}
-                                    >
-                                        <SelectTrigger className="w-[150px]">
-                                            <SelectValue placeholder="Chọn cấp độ" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Cơ bản">Cơ bản</SelectItem>
-                                            <SelectItem value="Trung bình">Trung bình</SelectItem>
-                                            <SelectItem value="Thành thạo">Thành thạo</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <Button type="button" onClick={handleAddSkill} disabled={isLoading}>
-                                        <PlusCircle className="w-4 h-4 mr-2" /> Thêm
-                                    </Button>
-                                </div>
-                                {/* Hiển thị lỗi của mảng skills, ví dụ "Vui lòng thêm ít nhất một kỹ năng" */}
-                                <p className="text-sm font-medium text-destructive">
-                                    {form.formState.errors.skills?.message}
-                                </p>
-                            </div>
-
-                            {/* Khu vực hiển thị các tag kỹ năng đã thêm */}
-                            <div className="flex flex-wrap gap-2 pt-2">
-                                {fields.map((field, index) => (
-                                    <Badge key={field.id} variant="secondary" className="px-3 py-1 text-sm">
-                                        {field.name} - {field.level}
-                                        <button
-                                            type="button"
-                                            onClick={() => remove(index)}
-                                            className="ml-2 rounded-full outline-none hover:bg-destructive/20"
+                                {/* === PHẦN NHẬP KỸ NĂNG ĐƯỢC THAY THẾ HOÀN TOÀN === */}
+                                <div className="space-y-3">
+                                    <FormLabel>Các kỹ năng bạn đã có</FormLabel>
+                                    <div className="flex items-start gap-2">
+                                        <Input
+                                            placeholder="Tên kỹ năng (VD: React)"
+                                            value={currentSkillName}
+                                            onChange={(e) => setCurrentSkillName(e.target.value)}
+                                            className="flex-grow"
+                                            disabled={isLoading}
+                                        />
+                                        <Select
+                                            value={currentSkillLevel}
+                                            onValueChange={setCurrentSkillLevel}
                                             disabled={isLoading}
                                         >
-                                            <X className="w-3 h-3" />
-                                        </button>
-                                    </Badge>
-                                ))}
-                            </div>
-                            {/* ====================================================== */}
+                                            <SelectTrigger className="w-[150px]">
+                                                <SelectValue placeholder="Chọn cấp độ" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Cơ bản">Cơ bản</SelectItem>
+                                                <SelectItem value="Trung bình">Trung bình</SelectItem>
+                                                <SelectItem value="Thành thạo">Thành thạo</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <Button type="button" onClick={handleAddSkill} disabled={isLoading}>
+                                            <PlusCircle className="w-4 h-4 mr-2" /> Thêm
+                                        </Button>
+                                    </div>
+                                    {/* Hiển thị lỗi của mảng skills, ví dụ "Vui lòng thêm ít nhất một kỹ năng" */}
+                                    <p className="text-sm font-medium text-destructive">
+                                        {form.formState.errors.skills?.message}
+                                    </p>
+                                </div>
 
-                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                {/* Thời gian hoàn thành (Giữ nguyên) */}
-                                <FormField
-                                    control={form.control}
-                                    name="timeline"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Thời gian mong muốn</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="VD: 6 tháng" {...field} disabled={isLoading} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                {/* Giờ học mỗi tuần (Giữ nguyên) */}
-                                <FormField
-                                    control={form.control}
-                                    name="hours"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Số giờ học mỗi tuần</FormLabel>
-                                            <FormControl>
-                                                <Input type="number" placeholder="VD: 10" {...field} disabled={isLoading} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                                {/* Khu vực hiển thị các tag kỹ năng đã thêm */}
+                                <div className="flex flex-wrap gap-2 pt-2">
+                                    {fields.map((field, index) => (
+                                        <Badge key={field.id} variant="secondary" className="px-3 py-1 text-sm">
+                                            {field.name} - {field.level}
+                                            <button
+                                                type="button"
+                                                onClick={() => remove(index)}
+                                                className="ml-2 rounded-full outline-none hover:bg-destructive/20"
+                                                disabled={isLoading}
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </Badge>
+                                    ))}
+                                </div>
+                                {/* ====================================================== */}
 
-                            <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
-                                {isLoading ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : "🚀 Tạo Lộ trình với AI"}
-                            </Button>
-                        </form>
-                    </Form>
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                    {/* Thời gian hoàn thành (Giữ nguyên) */}
+                                    <FormField
+                                        control={form.control}
+                                        name="timeline"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Thời gian mong muốn</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="VD: 6 tháng" {...field} disabled={isLoading} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {/* Giờ học mỗi tuần (Giữ nguyên) */}
+                                    <FormField
+                                        control={form.control}
+                                        name="hours"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Số giờ học mỗi tuần</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="VD: 10" {...field} disabled={isLoading} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+
+                                <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
+                                    {isLoading ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : "🚀 Tạo Lộ trình với AI"}
+                                </Button>
+                            </form>
+                        </Form>
+                    </fieldset>
                 </CardContent>
             </Card>
         </div>
