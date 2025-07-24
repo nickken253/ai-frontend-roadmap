@@ -15,22 +15,34 @@ export default function VerifyEmailPage() {
   const router = useRouter();
   const token = params.token as string;
 
+  // Debug: initial token value
+  console.log('VerifyEmailPage mounted, token param:', token);
+
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Đang xác thực tài khoản của bạn...');
 
   useEffect(() => {
+    // Debug: useEffect is called
+    console.log('[useEffect] run with token:', token);
+
     if (!token) {
       setStatus('error');
       setMessage('Token xác thực không được tìm thấy.');
+      console.error('[VerifyEmailPage] Không tìm thấy token trong params', params);
       return;
     }
 
     const verifyToken = async () => {
+      console.log('[verifyToken] Bắt đầu xác thực với token:', token);
       try {
-        await api.get(`/auth/verify-email/${token}`);
+        const result = await api.get(`/auth/verify-email/${token}`);
+        // Debug: API call success
+        console.log('[verifyToken] Xác thực thành công:', result);
         setStatus('success');
         setMessage('Xác thực tài khoản thành công! Bạn có thể đăng nhập ngay bây giờ.');
       } catch (error: any) {
+        // Debug: API call error
+        console.error('[verifyToken] Xác thực thất bại:', error);
         setStatus('error');
         setMessage(error.response?.data?.message || 'Token không hợp lệ hoặc đã hết hạn.');
       }
@@ -46,12 +58,20 @@ export default function VerifyEmailPage() {
           <CardTitle className="text-2xl">Trạng thái Xác thực Email</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-4">
-          {status === 'loading' && <Loader2 className="w-12 h-12 text-primary animate-spin" />}
-          {status === 'success' && <CircleCheck className="w-12 h-12 text-green-500" />}
-          {status === 'error' && <AlertTriangle className="w-12 h-12 text-red-500" />}
+          <div>
+            {status === 'loading' && <Loader2 className="w-12 h-12 text-primary animate-spin" />}
+            {status === 'success' && <CircleCheck className="w-12 h-12 text-green-500" />}
+            {status === 'error' && <AlertTriangle className="w-12 h-12 text-red-500" />}
+          </div>
           <p className="text-lg">{message}</p>
           {status !== 'loading' && (
-            <Button onClick={() => router.push('/login')} className="bg-primary hover:bg-primary-hover">
+            <Button
+              onClick={() => {
+                console.log('[Button] Điều hướng tới trang đăng nhập');
+                router.push('/login');
+              }}
+              className="bg-primary hover:bg-primary-hover"
+            >
               Tới trang Đăng nhập
             </Button>
           )}
