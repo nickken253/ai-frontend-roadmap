@@ -25,8 +25,9 @@ export default function VerificationBanner() {
   };
 
   return (
-    <div className="container mb-6">
-        <div className="flex items-center p-4 space-x-4 rounded-lg bg-amber-50 border border-amber-300 text-amber-800">
+    <div className="mb-6">
+        {/* Thêm `max-w-4xl` và `mx-auto` để giới hạn chiều rộng và tự căn giữa */}
+        <div className="flex items-center p-4 space-x-4 rounded-lg bg-amber-50 border border-amber-300 text-amber-800 max-w-4xl mx-auto shadow-sm">
             <MailWarning className="w-6 h-6 flex-shrink-0" />
             <div className="flex-grow">
                 <p className="font-semibold">Vui lòng xác thực email của bạn.</p>

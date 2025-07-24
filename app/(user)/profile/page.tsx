@@ -45,7 +45,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* NEW: Thông báo chưa xác thực email */}
-      {!user.is_verified && (
+      {/* {!user.is_verified && (
         <Card className="bg-amber-50 border-amber-300">
           <CardContent className="pt-6">
             <div className="flex items-center">
@@ -63,7 +63,7 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
-      )}
+      )} */}
 
       <div className="flex items-center space-x-4">
         <Avatar className="w-20 h-20">
