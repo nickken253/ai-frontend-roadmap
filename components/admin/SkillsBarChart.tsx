@@ -31,10 +31,10 @@ export function SkillsBarChart({ data }: { data: ChartData[] }) {
                 <Tooltip
                     // cursor={{ fill: 'hsl(var(--muted))' }}
                     contentStyle={{
-                        backgroundColor: 'hsl(var(--background) / 0.75)', // Nền trong suốt 75%
+                        backgroundColor: 'var(--background) / 0.75', // Nền trong suốt 75%
                         backdropFilter: 'blur(4px)', // Hiệu ứng làm mờ
                         WebkitBackdropFilter: 'blur(4px)', // Hỗ trợ trình duyệt cũ
-                        borderColor: 'hsl(var(--border) / 0.5)', // Bo viền cũng trong suốt
+                        borderColor: 'var(--border) / 0.5', // Bo viền cũng trong suốt
                         borderRadius: '0.5rem',
                         boxShadow: '0 4px 30px rgba(77, 77, 77, 0.1)', // Thêm bóng đổ cho đẹp hơn
                     }}

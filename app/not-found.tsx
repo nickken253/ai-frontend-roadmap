@@ -51,7 +51,7 @@ export default function NotFound() {
       onMouseMove={handleMouseMove}
     >
       {/* Nền Aurora giờ có z-index thấp nhất */}
-      <div className="absolute top-0 left-0 right-0 bottom-0 bg-[radial-gradient(circle_at_25%_30%,hsl(var(--primary)/0.2),transparent_40%),radial-gradient(circle_at_75%_70%,hsl(var(--secondary)/0.2),transparent_40%)] -z-20 filter blur-[80px]"></div>
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-[radial-gradient(circle_at_25%_30%,var(--primary)/0.2,transparent_40%),radial-gradient(circle_at_75%_70%,var(--secondary)/0.2,transparent_40%)] -z-20 filter blur-[80px]"></div>
       
       
       <div className="relative z-10 p-4">

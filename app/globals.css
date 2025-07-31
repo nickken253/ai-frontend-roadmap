@@ -1,5 +1,3 @@
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
 
 @import "tailwindcss";
@@ -49,38 +47,53 @@
 }
 
 :root {
+  --background: hsl(222 84% 4.9%);
+  --foreground: hsl(210 40% 98%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(0 0% 14.5%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(0 0% 14.5%);
+
+  --primary: hsl(198 93% 60%);
+  --primary-foreground: hsl(222 47% 11%);
+
+  --secondary: hsl(282 83% 58%);
+  --secondary-foreground: hsl(0 0% 20.5%);
+
+  --muted: hsl(217 33% 17%);
+  --muted-foreground: hsl(215 20% 65%);
+
+  --accent: hsl(45 96% 56%);
+  --accent-foreground: hsl(0 0% 20.5%);
+
+  --destructive: hsl(27 91% 52%);
+  --destructive-foreground: hsl(210 40% 98%);
+  /* Giữ nguyên màu chữ sáng để tương phản */
+
+  --border: hsl(0 0% 92.2%);
+  --input: hsl(0 0% 92.2%);
+  --ring: hsl(0 0% 70.8%);
+
   --radius: 0.625rem;
-  --background: #f8fafc;
-  --foreground: #1e293b;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #2563eb;
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: #34d399;
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: hsl(45 96% 56%); 
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Các màu cho biểu đồ */
+  --chart-1: hsl(41 91% 59%);
+  --chart-2: hsl(185 41% 54%);
+  --chart-3: hsl(227 21% 36%);
+  --chart-4: hsl(84 76% 76%);
+  --chart-5: hsl(70 75% 70%);
+
+  /* Các màu cho sidebar (nếu có) */
+  --sidebar: hsl(0 0% 98.5%);
+  --sidebar-foreground: hsl(0 0% 14.5%);
+  --sidebar-primary: hsl(0 0% 20.5%);
+  --sidebar-primary-foreground: hsl(0 0% 98.5%);
+  --sidebar-accent: hsl(0 0% 97%);
+  --sidebar-accent-foreground: hsl(0 0% 20.5%);
+  --sidebar-border: hsl(0 0% 92.2%);
+  --sidebar-ring: hsl(0 0% 70.8%);
 }
 
 .dark {
@@ -121,36 +134,26 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Aurora Background Effect */
-/* body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    radial-gradient(circle at 25% 30%, hsl(var(--primary) / 0.3), transparent 35%),
-    radial-gradient(circle at 75% 70%, hsl(var(--secondary) / 0.3), transparent 35%),
-    radial-gradient(circle at 10% 80%, hsl(var(--accent) / 0.2), transparent 35%);
-  filter: blur(80px);
-  z-index: -1;
-  animation: moveAurora 20s linear infinite;
+
+html,
+body {
+  overflow-x: hidden;
 }
 
-@keyframes moveAurora {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(20px, 40px) rotate(20deg); }
-  50% { transform: translate(-20px, -40px) rotate(-20deg); }
-  75% { transform: translate(40px, -20px) rotate(10deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-} */
+.text-shadow-glow {
+  filter: drop-shadow(0 0 8px var(--primary));
+}
 
-html, body {
-  overflow-x: hidden;
+.text-shadow-glow-secondary {
+  filter: drop-shadow(0 0 8px var(--secondary));
+}
+
+.text-shadow-glow-accent {
+  filter: drop-shadow(0 0 8px var(--accent));
 }

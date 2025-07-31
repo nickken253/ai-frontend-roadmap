@@ -22,7 +22,8 @@ export type User = {
     createdAt: string;
 };
 
-const StatusToggle = ({ user }: { user: User }) => {
+// EXPORT component này để tái sử dụng
+export const StatusToggle = ({ user }: { user: User }) => {
     const { user: currentUser } = useAuthStore();
     const queryClient = useQueryClient();
     const mutation = useMutation({
@@ -38,7 +39,8 @@ const StatusToggle = ({ user }: { user: User }) => {
     return <Switch checked={user.is_active} onCheckedChange={(val) => mutation.mutate(val)} disabled={isSelf} />;
 };
 
-const RoleSelector = ({ user }: { user: User }) => {
+// EXPORT component này để tái sử dụng
+export const RoleSelector = ({ user }: { user: User }) => {
     const { user: currentUser } = useAuthStore();
     const queryClient = useQueryClient();
     const mutation = useMutation({

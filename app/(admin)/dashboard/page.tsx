@@ -37,8 +37,8 @@ export default function AdminDashboardPage() {
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">Bảng điều khiển</h1>
 
-            {/* Hàng 1: Các chỉ số KPI chính (giữ nguyên) */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {/* SỬA LỖI Ở ĐÂY: Thay đổi grid layout */}
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-medium">Tổng người dùng</CardTitle>
@@ -46,18 +46,18 @@ export default function AdminDashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{data?.dashboard.total_users}</div>
-                        <p className="text-xs text-muted-foreground">Tổng số tài khoản trong hệ thống</p>
+                        <p className="text-xs text-muted-foreground">Tổng số tài khoản</p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Người dùng mới hôm nay</CardTitle>
+                        <CardTitle className="text-sm font-medium">Người dùng mới</CardTitle>
                         <Users className="w-4 h-4 text-green-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">+{data?.dashboard.new_users_today}</div>
-                        <p className="text-xs text-muted-foreground">Tài khoản mới trong 24 giờ qua</p>
+                        <p className="text-xs text-muted-foreground">trong hôm nay</p>
                     </CardContent>
                 </Card>
 
@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">+{data?.dashboard.roadmaps_generated_today}</div>
-                        <p className="text-xs text-muted-foreground">Lượt tạo mới trong hôm nay</p>
+                        <p className="text-xs text-muted-foreground">trong hôm nay</p>
                     </CardContent>
                 </Card>
 
@@ -79,10 +79,9 @@ export default function AdminDashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-destructive">{data?.dashboard.failed_api_calls_today}</div>
-                        <p className="text-xs text-muted-foreground">Lỗi xảy ra trong hôm nay</p>
+                        <p className="text-xs text-muted-foreground">trong hôm nay</p>
                     </CardContent>
                 </Card>
-                {/* Thêm card thứ 4 ở đây nếu muốn */}
             </div>
 
             {/* Hàng 2: Hai biểu đồ mới */}

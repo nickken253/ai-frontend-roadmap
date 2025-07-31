@@ -63,7 +63,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen text-shadow-glow">
       <Card className="w-full max-w-md shadow-soft">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-text">Tạo tài khoản</CardTitle>

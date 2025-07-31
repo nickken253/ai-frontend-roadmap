@@ -16,7 +16,7 @@ import LandingHeader from '@/components/layout/LandingHeader';
 // Nút "thông minh" với hiệu ứng hover đã sửa lỗi màu chữ
 const ShimmerButton = ({ children, href }: { children: React.ReactNode, href: string }) => (
   <Link href={href}>
-    <Button size="lg" className="relative text-lg overflow-hidden group shadow-lg">
+    <Button size="lg" className="relative text-lg overflow-hidden group shadow-lg ">
       <span className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <span className="absolute inset-0.5 bg-background rounded-md transition-all duration-300 group-hover:opacity-0" />
       <span className="relative z-10 flex items-center text-foreground group-hover:text-background transition-colors duration-300">
@@ -50,28 +50,28 @@ export default function HomePage() {
     // Sửa đổi ở đây: Thêm `relative` và bỏ `bg-background`
     <div className="relative flex flex-col min-h-screen text-foreground overflow-x-hidden">
       {/* Hiệu ứng Aurora được áp dụng trực tiếp ở đây */}
-      <div className="absolute top-0 left-0 right-0 bottom-0 bg-[radial-gradient(circle_at_25%_30%,hsl(var(--primary)/0.3),transparent_35%),radial-gradient(circle_at_75%_70%,hsl(var(--secondary)/0.3),transparent_35%),radial-gradient(circle_at_10%_80%,hsl(var(--accent)/0.2),transparent_35%)] -z-10 filter blur-[80px] animate-aurora"></div>
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-[radial-gradient(circle_at_25%_30%,var(--primary)/0.3,transparent_35%),radial-gradient(circle_at_75%_70%,var(--secondary)/0.3,transparent_35%),radial-gradient(circle_at_10%_80%,var(--accent)/0.2,transparent_35%)] -z-10 filter blur-[80px] animate-aurora"></div>
 
       <LandingHeader />
 
       <main>
         {/* === Hero Section === */}
         <section className="container relative mx-auto flex flex-col items-center justify-center text-center py-24 md:py-32">
-          <motion.div 
+          <motion.div
             variants={fadeInVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             custom={0} // delay = 0
           >
-            <Badge variant="secondary" className="mb-4 text-sm px-4 py-1">Sử dụng sức mạnh của Gemini AI</Badge>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-secondary to-accent">
+            <Badge variant="secondary" className="mb-4 text-sm text-gray-100 px-4 py-1 text-shadow-glow">Sử dụng sức mạnh của Gemini AI</Badge>
+            <h1 className="text-5xl leading-snug md:text-7xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-secondary to-accent">
               Lộ Trình Học Tập Cá Nhân Hóa
             </h1>
-            <p className="max-w-3xl mx-auto mt-6 text-lg md:text-xl text-muted-foreground">
+            <p className="max-w-3xl mx-auto mt-6 text-lg md:text-xl text-muted-foreground text-shadow-glow" >
               Biến mục tiêu sự nghiệp thành một kế hoạch chi tiết. AI của chúng tôi sẽ vạch ra con đường rõ ràng nhất để bạn chinh phục đỉnh cao mới.
             </p>
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex justify-center gap-4 mt-8 ">
               <ShimmerButton href="/register">
                 Bắt đầu Hành trình <ArrowRight className="w-5 h-5 ml-2" />
               </ShimmerButton>
@@ -95,7 +95,7 @@ export default function HomePage() {
         {/* === Technology Showcase Section (FIXED) === */}
         <section className="py-16">
           <div className="relative w-full overflow-hidden">
-            <p className="text-center text-sm font-semibold text-muted-foreground mb-6">HỖ TRỢ HÀNG TRĂM CÔNG NGHỆ & KỸ NĂNG</p>
+            <p className="text-center text-sm font-semibold text-muted-foreground mb-6 text-shadow-glow">HỖ TRỢ HÀNG TRĂM CÔNG NGHỆ & KỸ NĂNG</p>
             <motion.div
               className="flex w-[200%]"
               animate={{ x: ['0%', '-50%'] }}
@@ -119,12 +119,12 @@ export default function HomePage() {
 
         {/* === How It Works Section === */}
         <section className="container mx-auto py-24">
-          <motion.h2 variants={fadeInVariants} className="text-4xl font-bold text-center mb-16">Hoạt động Chỉ trong 3 bước</motion.h2>
+          <motion.h2 variants={fadeInVariants} className="text-4xl font-bold text-center mb-16 text-shadow-glow">Hoạt động Chỉ trong 3 bước</motion.h2>
           <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3">
             <div className="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 bg-border hidden md:block" />
-            <motion.div {...fadeIn(0.2)} className="relative text-center p-6"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-primary text-primary text-3xl font-bold">1</div><h3 className="mb-2 text-2xl font-semibold">Cung cấp Thông tin</h3><p className="text-muted-foreground">Cho chúng tôi biết kỹ năng hiện tại và mục tiêu nghề nghiệp bạn đang hướng tới.</p></motion.div>
-            <motion.div {...fadeIn(0.4)} className="relative text-center p-6"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-secondary text-secondary text-3xl font-bold">2</div><h3 className="mb-2 text-2xl font-semibold">AI Phân tích</h3><p className="text-muted-foreground">Hệ thống sẽ phân tích, so sánh và xác định "khoảng trống" kiến thức của bạn.</p></motion.div>
-            <motion.div {...fadeIn(0.6)} className="relative text-center p-6"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-accent text-accent text-3xl font-bold">3</div><h3 className="mb-2 text-2xl font-semibold">Nhận Lộ trình</h3><p className="text-muted-foreground">Nhận một lộ trình chi tiết, bao gồm các chủ đề và tài nguyên học tập chọn lọc.</p></motion.div>
+            <motion.div {...fadeIn(0.2)} className="relative text-center p-6 text-shadow-glow"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-primary text-primary text-3xl font-bold">1</div><h3 className="mb-2 text-2xl font-semibold">Cung cấp Thông tin</h3><p className="text-muted-foreground">Cho chúng tôi biết kỹ năng hiện tại và mục tiêu nghề nghiệp bạn đang hướng tới.</p></motion.div>
+            <motion.div {...fadeIn(0.4)} className="relative text-center p-6 text-shadow-glow"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-secondary text-secondary text-3xl font-bold text-shadow-glow-secondary">2</div><h3 className="mb-2 text-2xl font-semibold">AI Phân tích</h3><p className="text-muted-foreground">Hệ thống sẽ phân tích, so sánh và xác định "khoảng trống" kiến thức của bạn.</p></motion.div>
+            <motion.div {...fadeIn(0.6)} className="relative text-center p-6 text-shadow-glow"><div className="relative z-10 flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-background border-2 rounded-full border-accent text-accent text-3xl font-bold text-shadow-glow-accent">3</div><h3 className="mb-2 text-2xl font-semibold">Nhận Lộ trình</h3><p className="text-muted-foreground">Nhận một lộ trình chi tiết, bao gồm các chủ đề và tài nguyên học tập chọn lọc.</p></motion.div>
           </div>
         </section>
 
@@ -141,7 +141,7 @@ export default function HomePage() {
               variants={{
                 visible: { transition: { staggerChildren: 0.2 } }
               }}
-              className="order-2 space-y-8 lg:order-1"
+              className="order-2 space-y-8 lg:order-1 text-shadow-glow"
             >
               <motion.div variants={fadeInVariants}>
                 <h2 className="text-4xl font-bold">Không chỉ là một danh sách.</h2>
@@ -200,7 +200,7 @@ export default function HomePage() {
         </section>
 
         {/* === NEW: Who is this for Section === */}
-        <section className="container mx-auto py-24">
+        <section className="container mx-auto py-24 text-shadow-glow">
           <motion.h2 {...fadeIn()} className="text-4xl font-bold text-center mb-16">Được thiết kế cho Mọi người</motion.h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <motion.div {...fadeIn(0.2)}>
@@ -213,7 +213,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div {...fadeIn(0.4)}>
               <Card className="h-full text-center transition-all duration-300 hover:border-secondary hover:shadow-xl overflow-hidden">
-                <img src="https://placehold.co/400x250/34d399/ffffff?text=Career+Changers" alt="Career Changers" className="w-full h-48 object-cover" />
+                <img src="https://placehold.co/400x250/b73bed/ffffff?text=Career+Changers" alt="Career Changers" className="w-full h-48 object-cover" />
                 <CardHeader><Briefcase className="w-12 h-12 mx-auto mb-4 text-secondary" /><CardTitle>Người chuyển ngành</CardTitle></CardHeader>
                 <CardContent><p className="text-muted-foreground">Tận dụng kinh nghiệm cũ và lấp đầy khoảng trống kiến thức một cách hiệu quả.</p></CardContent>
               </Card>
@@ -234,7 +234,7 @@ export default function HomePage() {
             {/* Cột bên trái: Tiêu đề & Mô tả */}
             <motion.div
               {...fadeIn()}
-              className="md:col-span-1"
+              className="md:col-span-1 text-shadow-glow"
             >
               <h2 className="text-4xl font-bold">Bạn có câu hỏi?</h2>
               <p className="mt-4 text-lg text-muted-foreground">
@@ -280,7 +280,7 @@ export default function HomePage() {
         <section className="py-24">
           <motion.div {...fadeIn()} className="container mx-auto text-center">
             <Card className="inline-block p-8 md:p-12 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 shadow-2xl">
-              <h2 className="text-4xl font-bold">Sẵn sàng để tăng tốc sự nghiệp của bạn?</h2>
+              <h2 className="text-4xl font-bold text-primary text-shadow-glow">Sẵn sàng để tăng tốc sự nghiệp của bạn?</h2>
               <p className="mt-4 text-xl text-muted-foreground">Tương lai của bạn chỉ cách một cú nhấp chuột.</p>
               <div className="mt-8">
                 <ShimmerButton href="/register">
@@ -295,6 +295,7 @@ export default function HomePage() {
       <footer className="py-8 border-t">
         <div className="container mx-auto text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} AI Learning Roadmap. All rights reserved.</p>
+          <p>Developed by NickKen</p>
         </div>
       </footer>
     </div>

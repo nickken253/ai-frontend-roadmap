@@ -20,6 +20,7 @@ import api from '@/lib/api';
 import type { Resolver } from "react-hook-form";
 import { useAuthStore } from '@/store/authStore';
 import { Combobox } from '@headlessui/react';
+import GeneratingLoader from '@/components/roadmap/GeneratingLoader';
 
 
 
@@ -59,6 +60,8 @@ export default function GeneratePage() {
 
     const [currentSkillName, setCurrentSkillName] = useState('');
     const [currentSkillLevel, setCurrentSkillLevel] = useState('Cơ bản');
+
+    const [generationStatus, setGenerationStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
     type RoadmapFormValues = z.infer<typeof roadmapSchema>;
 
@@ -117,184 +120,196 @@ export default function GeneratePage() {
 
     async function onSubmit(values: z.infer<typeof roadmapSchema>) {
         setIsLoading(true);
-        toast.info("AI đang phân tích và tạo lộ trình cho bạn...", {
-            description: "Quá trình này có thể mất một vài phút."
-        });
+        setGenerationStatus('loading');
+        // toast.info("AI đang phân tích và tạo lộ trình cho bạn...", {
+        //     description: "Quá trình này có thể mất một vài phút."
+        // });
 
         try {
             // Dữ liệu `values` giờ đã đúng định dạng, gửi thẳng đi mà không cần xử lý
             const response = await api.post('/roadmaps/generate', values);
             const newRoadmap = response.data;
 
-            toast.success("Tạo lộ trình thành công!");
-            router.push(`/roadmaps/${newRoadmap._id}`);
+            // toast.success("Tạo lộ trình thành công!");
+            setGenerationStatus('success');
+            setTimeout(() => {
+                router.push(`/roadmaps/${newRoadmap._id}`);
+                setGenerationStatus('idle'); // Reset trạng thái sau khi chuyển hướng
+            }, 2000);
         } catch (error: any) {
             toast.error("Tạo lộ trình thất bại", {
                 description: error.response?.data?.message || "Đã có lỗi xảy ra từ server.",
             });
+            setGenerationStatus('idle');
         } finally {
             setIsLoading(false);
         }
     }
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <Card className="shadow-soft">
-                <CardHeader>
-                    <CardTitle className="text-3xl font-bold">Tạo Lộ trình Học tập của bạn</CardTitle>
-                    <CardDescription>
-                        Cung cấp thông tin để AI của chúng tôi tạo ra một con đường dành riêng cho bạn.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <fieldset disabled={!user?.is_verified}>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                {/* Mục tiêu nghề nghiệp (Giữ nguyên) */}
-                                <FormField
-                                    control={form.control}
-                                    name="goal"
-                                    render={({ field }) => {
-                                        const [query, setQuery] = useState(field.value || '');
+        <>
+            {(generationStatus === 'loading' || generationStatus === 'success') && (
+                <GeneratingLoader status={generationStatus} />
+            )}
 
-                                        const filteredGoals = useMemo(() => {
-                                            return goals.filter(goal => goal.toLowerCase().includes(query.toLowerCase()));
-                                        }, [query, goals]);
+            <div className="max-w-4xl mx-auto">
+                <Card className="shadow-soft">
+                    <CardHeader>
+                        <CardTitle className="text-3xl font-bold">Tạo Lộ trình Học tập của bạn</CardTitle>
+                        <CardDescription>
+                            Cung cấp thông tin để AI của chúng tôi tạo ra một con đường dành riêng cho bạn.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <fieldset disabled={!user?.is_verified}>
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                    {/* Mục tiêu nghề nghiệp (Giữ nguyên) */}
+                                    <FormField
+                                        control={form.control}
+                                        name="goal"
+                                        render={({ field }) => {
+                                            const [query, setQuery] = useState(field.value || '');
 
-                                        return (
-                                            <FormItem>
-                                                <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
-                                                <Combobox value={query} onChange={(val) => {
-                                                    setQuery(val ?? '');
-                                                    field.onChange(val ?? ''); // update react-hook-form value
-                                                }}>
-                                                    <div className="relative">
-                                                        <Combobox.Input
-                                                            className="w-full border rounded px-3 py-2"
-                                                            onChange={(e) => {
-                                                                setQuery(e.target.value);
-                                                                field.onChange(e.target.value);
-                                                            }}
-                                                            placeholder="Chọn hoặc nhập mục tiêu của bạn"
-                                                            value={query}
-                                                            disabled={isLoading}
-                                                        />
+                                            const filteredGoals = useMemo(() => {
+                                                return goals.filter(goal => goal.toLowerCase().includes(query.toLowerCase()));
+                                            }, [query, goals]);
 
-                                                        {filteredGoals.length > 0 && query !== '' && (
-                                                            <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg z-10">
-                                                                {filteredGoals.map((goal, index) => (
-                                                                    <Combobox.Option
-                                                                        key={index}
-                                                                        value={goal}
-                                                                        className={({ active }) =>
-                                                                            `cursor-pointer select-none px-4 py-2 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'}`
-                                                                        }
-                                                                    >
-                                                                        {goal}
-                                                                    </Combobox.Option>
-                                                                ))}
-                                                            </Combobox.Options>
-                                                        )}
-                                                    </div>
-                                                </Combobox>
-                                                <FormMessage />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
+                                            return (
+                                                <FormItem>
+                                                    <FormLabel>Mục tiêu nghề nghiệp</FormLabel>
+                                                    <Combobox value={query} onChange={(val) => {
+                                                        setQuery(val ?? '');
+                                                        field.onChange(val ?? ''); // update react-hook-form value
+                                                    }}>
+                                                        <div className="relative">
+                                                            <Combobox.Input
+                                                                className="w-full border rounded px-3 py-2"
+                                                                onChange={(e) => {
+                                                                    setQuery(e.target.value);
+                                                                    field.onChange(e.target.value);
+                                                                }}
+                                                                placeholder="Chọn hoặc nhập mục tiêu của bạn"
+                                                                value={query}
+                                                                disabled={isLoading}
+                                                            />
 
-                                {/* === PHẦN NHẬP KỸ NĂNG ĐƯỢC THAY THẾ HOÀN TOÀN === */}
-                                <div className="space-y-3">
-                                    <FormLabel>Các kỹ năng bạn đã có</FormLabel>
-                                    <div className="flex items-start gap-2">
-                                        <Input
-                                            placeholder="Tên kỹ năng (VD: React)"
-                                            value={currentSkillName}
-                                            onChange={(e) => setCurrentSkillName(e.target.value)}
-                                            className="flex-grow"
-                                            disabled={isLoading}
-                                        />
-                                        <Select
-                                            value={currentSkillLevel}
-                                            onValueChange={setCurrentSkillLevel}
-                                            disabled={isLoading}
-                                        >
-                                            <SelectTrigger className="w-[150px]">
-                                                <SelectValue placeholder="Chọn cấp độ" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="Cơ bản">Cơ bản</SelectItem>
-                                                <SelectItem value="Trung bình">Trung bình</SelectItem>
-                                                <SelectItem value="Thành thạo">Thành thạo</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <Button type="button" onClick={handleAddSkill} disabled={isLoading}>
-                                            <PlusCircle className="w-4 h-4 mr-2" /> Thêm
-                                        </Button>
-                                    </div>
-                                    {/* Hiển thị lỗi của mảng skills, ví dụ "Vui lòng thêm ít nhất một kỹ năng" */}
-                                    <p className="text-sm font-medium text-destructive">
-                                        {form.formState.errors.skills?.message}
-                                    </p>
-                                </div>
+                                                            {filteredGoals.length > 0 && query !== '' && (
+                                                                <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg z-10">
+                                                                    {filteredGoals.map((goal, index) => (
+                                                                        <Combobox.Option
+                                                                            key={index}
+                                                                            value={goal}
+                                                                            className={({ active }) =>
+                                                                                `cursor-pointer select-none px-4 py-2 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'}`
+                                                                            }
+                                                                        >
+                                                                            {goal}
+                                                                        </Combobox.Option>
+                                                                    ))}
+                                                                </Combobox.Options>
+                                                            )}
+                                                        </div>
+                                                    </Combobox>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            );
+                                        }}
+                                    />
 
-                                {/* Khu vực hiển thị các tag kỹ năng đã thêm */}
-                                <div className="flex flex-wrap gap-2 pt-2">
-                                    {fields.map((field, index) => (
-                                        <Badge key={field.id} variant="secondary" className="px-3 py-1 text-sm">
-                                            {field.name} - {field.level}
-                                            <button
-                                                type="button"
-                                                onClick={() => remove(index)}
-                                                className="ml-2 rounded-full outline-none hover:bg-destructive/20"
+                                    {/* === PHẦN NHẬP KỸ NĂNG ĐƯỢC THAY THẾ HOÀN TOÀN === */}
+                                    <div className="space-y-3">
+                                        <FormLabel>Các kỹ năng bạn đã có</FormLabel>
+                                        <div className="flex items-start gap-2">
+                                            <Input
+                                                placeholder="Tên kỹ năng (VD: React)"
+                                                value={currentSkillName}
+                                                onChange={(e) => setCurrentSkillName(e.target.value)}
+                                                className="flex-grow"
+                                                disabled={isLoading}
+                                            />
+                                            <Select
+                                                value={currentSkillLevel}
+                                                onValueChange={setCurrentSkillLevel}
                                                 disabled={isLoading}
                                             >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </Badge>
-                                    ))}
-                                </div>
-                                {/* ====================================================== */}
+                                                <SelectTrigger className="w-[150px]">
+                                                    <SelectValue placeholder="Chọn cấp độ" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Cơ bản">Cơ bản</SelectItem>
+                                                    <SelectItem value="Trung bình">Trung bình</SelectItem>
+                                                    <SelectItem value="Thành thạo">Thành thạo</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <Button type="button" onClick={handleAddSkill} disabled={isLoading}>
+                                                <PlusCircle className="w-4 h-4 mr-2" /> Thêm
+                                            </Button>
+                                        </div>
+                                        {/* Hiển thị lỗi của mảng skills, ví dụ "Vui lòng thêm ít nhất một kỹ năng" */}
+                                        <p className="text-sm font-medium text-destructive">
+                                            {form.formState.errors.skills?.message}
+                                        </p>
+                                    </div>
 
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    {/* Thời gian hoàn thành (Giữ nguyên) */}
-                                    <FormField
-                                        control={form.control}
-                                        name="timeline"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Thời gian mong muốn</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="VD: 6 tháng" {...field} disabled={isLoading} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    {/* Giờ học mỗi tuần (Giữ nguyên) */}
-                                    <FormField
-                                        control={form.control}
-                                        name="hours"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Số giờ học mỗi tuần</FormLabel>
-                                                <FormControl>
-                                                    <Input type="number" placeholder="VD: 10" {...field} disabled={isLoading} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
+                                    {/* Khu vực hiển thị các tag kỹ năng đã thêm */}
+                                    <div className="flex flex-wrap gap-2 pt-2">
+                                        {fields.map((field, index) => (
+                                            <Badge key={field.id} variant="secondary" className="px-3 py-1 text-sm">
+                                                {field.name} - {field.level}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => remove(index)}
+                                                    className="ml-2 rounded-full outline-none hover:bg-destructive/20"
+                                                    disabled={isLoading}
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                    {/* ====================================================== */}
 
-                                <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
-                                    {isLoading ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : "🚀 Tạo Lộ trình với AI"}
-                                </Button>
-                            </form>
-                        </Form>
-                    </fieldset>
-                </CardContent>
-            </Card>
-        </div>
+                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                        {/* Thời gian hoàn thành (Giữ nguyên) */}
+                                        <FormField
+                                            control={form.control}
+                                            name="timeline"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Thời gian mong muốn</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="VD: 6 tháng" {...field} disabled={isLoading} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {/* Giờ học mỗi tuần (Giữ nguyên) */}
+                                        <FormField
+                                            control={form.control}
+                                            name="hours"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Số giờ học mỗi tuần</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="number" placeholder="VD: 10" {...field} disabled={isLoading} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
+                                        {isLoading ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : "🚀 Tạo Lộ trình với AI"}
+                                    </Button>
+                                </form>
+                            </Form>
+                        </fieldset>
+                    </CardContent>
+                </Card>
+            </div>
+        </>
     );
 }

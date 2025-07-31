@@ -79,10 +79,10 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <Card className="w-full max-w-md shadow-soft">
+        <div className="flex items-center justify-center min-h-screen text-white text-shadow-glow">
+            <Card className="w-full max-w-md shadow-soft ">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold text-text">Chào mừng trở lại!</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-text ">Chào mừng trở lại!</CardTitle>
                     <CardDescription>Đăng nhập để tạo lộ trình học tập của bạn.</CardDescription>
                 </CardHeader>
                 <CardContent>

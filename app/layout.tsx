@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Roadmap AI",
-  description: "The roadmap AI using Gemini",
+  title: "AI Learning Roadmap",
+  description: "Vạch Ra Lộ Trình, Chinh Phục Tương Lai",
 };
 
 export default function RootLayout({
@@ -32,6 +32,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${nunito.className}`}
       >
+        <div className="absolute top-0 left-0 w-full h-full opacity-20 -z-50"></div>
+        <div className="pointer-events-none fixed inset-0 z-30 transition duration-300 lg:absolute"
+             style={{
+               background: "radial-gradient(600px at 50% 50%, rgba(29, 78, 216, 0.15), transparent 80%)"
+             }}>
+        </div>
         <QueryProvider>
           {children}
           <Toaster richColors position="top-right" />

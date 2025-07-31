@@ -12,8 +12,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-
-
+// Cập nhật type Log để bao gồm các trường optional
 export type Log = {
     _id: string;
     user_id: {
@@ -30,22 +29,17 @@ export type Log = {
 
 export const columns: ColumnDef<Log>[] = [
     {
-        accessorKey: 'user_id', // Giờ đây chúng ta truy cập cả object user_id
+        accessorKey: 'user_id',
         header: 'Người dùng',
-        // Dùng `cell` để tùy chỉnh cách hiển thị
         cell: ({ row }) => {
             const user = row.original.user_id;
-
             if (!user || !user._id) return <span className="text-muted-foreground">Không rõ</span>;
-
-            // Rút gọn ID chỉ hiển thị 6 ký tự cuối
             const shortId = `...${user._id.slice(-6)}`;
 
             return (
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            {/* Dùng div để bọc nội dung cho Tooltip */}
                             <div className="flex flex-col cursor-pointer">
                                 <span className="font-medium">{user.email || 'N/A'}</span>
                                 <span className="text-xs text-muted-foreground">{shortId}</span>
@@ -59,7 +53,6 @@ export const columns: ColumnDef<Log>[] = [
             );
         },
     },
-    // { accessorKey: 'user_id.email', header: 'Email' },
     {
         accessorKey: 'log_type',
         header: ({ column }) => (
