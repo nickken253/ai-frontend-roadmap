@@ -43,8 +43,8 @@
 
 1.  **Clone repository:**
     ```bash
-    git clone [https://github.com/nickken253/ai-backend-roadmap.git](https://github.com/nickken253/ai-backend-roadmap.git)
-    cd ai-backend-roadmap # Di chuyển vào thư mục frontend của bạn
+    git clone [https://github.com/nickken253/ai-frontend-roadmap.git](https://github.com/nickken253/ai-frontend-roadmap.git)
+    cd ai-frontend-roadmap # Di chuyển vào thư mục frontend của bạn
     ```
 
 2.  **Cài đặt các dependencies:**
