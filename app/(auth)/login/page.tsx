@@ -18,6 +18,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import api from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
 
+import { FaGithub, FaGoogle } from 'react-icons/fa';
+
 const formSchema = z.object({
     email: z.string().email('Email không hợp lệ.'),
     password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự.'),
@@ -64,7 +66,7 @@ export default function LoginPage() {
             login(user, token);
 
             toast.success('Đăng nhập thành công!', {
-                description: `Chào mừng trở lại, ${user.name || user.email}`,
+                description: `Chào mừng trở lại, ${user.username || user.email}`,
             });
 
         } catch (error: any) {
@@ -77,6 +79,9 @@ export default function LoginPage() {
             setIsLoading(false);
         }
     }
+    const handleSocialLogin = (provider: 'google' | 'github') => {
+        window.location.href = `https://ai-backend-roadmap.onrender.com/api/v1/auth/${provider}`;
+    };
 
     return (
         <div className="flex items-center justify-center min-h-screen text-white text-shadow-glow">
@@ -124,6 +129,29 @@ export default function LoginPage() {
                         <Link href="/forgot-password" className="text-sm text-primary hover:underline">
                             Quên mật khẩu?
                         </Link>
+                    </div>
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">
+                                Hoặc tiếp tục với
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Button variant="outline" onClick={() => handleSocialLogin('google')}>
+                            <FaGoogle className="mr-2 h-4 w-4" />
+                            Google
+                        </Button>
+                        <Button variant="outline" onClick={() => handleSocialLogin('github')}>
+                            <FaGithub className="mr-2 h-4 w-4" />
+                            GitHub
+                        </Button>
+                    </div>
+                    <div className="mt-6 text-center text-sm">
                         <p className="mt-2">
                             Chưa có tài khoản?{' '}
                             <Link href="/register" className="font-semibold text-primary hover:underline">

@@ -1,29 +1,3 @@
-// // components/roadmap/RoadmapFlowChart.tsx
-// 'use client';
-// import ReactFlow, { Background, Controls, Edge, Node } from 'reactflow';
-// import 'reactflow/dist/style.css';
-
-// interface RoadmapFlowChartProps {
-//   nodes: Node[];
-//   edges: Edge[];
-// }
-
-// export default function RoadmapFlowChart({ nodes, edges }: RoadmapFlowChartProps) {
-//   return (
-//     <ReactFlow
-//       nodes={nodes}
-//       edges={edges}
-//       fitView
-//       proOptions={{ hideAttribution: true }} // Ẩn logo của React Flow
-//       nodesDraggable={false} // Không cho kéo node
-//       nodesConnectable={false} // Không cho kết nối node
-//     >
-//       <Background />
-//       <Controls />
-//     </ReactFlow>
-//   );
-// }
-
 // components/roadmap/RoadmapFlowChart.tsx
 'use client';
 
@@ -31,11 +5,10 @@ import { useMemo } from 'react';
 import {
   ReactFlow,
   Background,
-  Controls,
-  MiniMap,
   Node,
   Edge,
-  MarkerType
+  MarkerType,
+  NodeMouseHandler,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -78,7 +51,7 @@ const generateLayout = (roadmapDetails: any) => {
       id: phaseId,
       type: 'phase',
       position: { x: xPosition, y: yOffset },
-      data: phase,
+      data: { ...phase, name: phase.title }, // Thêm 'name' để thống nhất dữ liệu
       style: { stroke: 'var(--primary)', strokeWidth: 2 },
     });
 
@@ -144,10 +117,20 @@ const generateLayout = (roadmapDetails: any) => {
   return { initialNodes: nodes, initialEdges: edges };
 };
 
+interface RoadmapFlowChartProps {
+  roadmapDetails: any;
+  onNodeClick: (data: any) => void;
+}
 
-export default function RoadmapFlowChart({ roadmapDetails }: { roadmapDetails: any }) {
+export default function RoadmapFlowChart({ roadmapDetails, onNodeClick }: RoadmapFlowChartProps) {
   const { initialNodes, initialEdges } = useMemo(() => generateLayout(roadmapDetails), [roadmapDetails]);
 
+  const handleNodeClick: NodeMouseHandler = (event, node) => {
+    // Chỉ xử lý click cho node 'phase' và 'topic'
+    if (node.type === 'phase' || node.type === 'topic') {
+      onNodeClick(node.data);
+    }
+  };
   return (
     <ReactFlow
       nodes={initialNodes}
@@ -155,20 +138,9 @@ export default function RoadmapFlowChart({ roadmapDetails }: { roadmapDetails: a
       nodeTypes={nodeTypes}
       fitView
       proOptions={{ hideAttribution: true }}
+      onNodeClick={handleNodeClick}
     >
       <Background gap={20} size={1} color="var(--primary) / 0.1" />
-      {/* <Controls className="bg-slate-800/50 border [backdrop-filter:blur(4px)] border-slate-700 rounded-lg" /> */}
-      {/* <MiniMap
-        className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg overflow-hidden"
-        nodeColor={(node) => {
-          if (node.type === 'phase') return 'var(--secondary)';
-          if (node.type === 'topic') return 'var(--primary)';
-          return '#ccc';
-        }}
-        nodeStrokeWidth={3}
-        pannable
-        maskColor="var(--background) / 0.8"
-      /> */}
     </ReactFlow>
   );
 }

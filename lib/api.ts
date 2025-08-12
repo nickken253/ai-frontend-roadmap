@@ -22,5 +22,5 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+// export const linkSocialAccount = (token: string) => api.post('/auth/link-account', { token }).then(res => res.data);
 export default api;

@@ -54,7 +54,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative w-8 h-8 rounded-full">
                 <Avatar className="w-8 h-8">
-                  {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
+                  <AvatarImage src={user?.avatar} alt="Avatar" />
                   <AvatarFallback className="bg-primary text-primary-foreground">{emailInitial}</AvatarFallback>
                 </Avatar>
               </Button>
@@ -62,7 +62,7 @@ export default function Header() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name || 'Tài khoản'}</p>
+                  <p className="text-sm font-medium leading-none">{'@' + user?.username || 'Tài khoản'}</p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email}
                   </p>

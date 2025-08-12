@@ -24,7 +24,7 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
-  const emailInitial = user.name ? user.name.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : '?');
+  const emailInitial = user.fullname ? user.fullname.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : '?');
 
   const handleResendVerification = async () => {
     setIsSendingVerification(true);
@@ -44,38 +44,16 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* NEW: Thông báo chưa xác thực email */}
-      {/* {!user.is_verified && (
-        <Card className="bg-amber-50 border-amber-300">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <AlertTriangle className="w-5 h-5 mr-3 text-amber-600" />
-              <div className="flex-grow">
-                <p className="font-semibold">Tài khoản của bạn chưa được xác thực.</p>
-                <p className="text-sm text-muted-foreground">
-                  Xác thực email để bảo vệ tài khoản và sử dụng đầy đủ tính năng.
-                </p>
-              </div>
-              <Button onClick={handleResendVerification} disabled={isSendingVerification} size="sm">
-                {isSendingVerification && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                Gửi lại email
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )} */}
-
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 text-shadow-glow">
         <Avatar className="w-20 h-20">
-          <AvatarImage src={user.avatarUrl} alt={user.name} />
+          <AvatarImage src={user.avatar} alt={user.fullname} />
           <AvatarFallback className="text-3xl">{emailInitial}</AvatarFallback>
         </Avatar>
         <div className="flex items-center space-x-2">
           <div>
-            <h1 className="text-3xl font-bold">{user.name || user.email}</h1>
-            <p className="text-muted-foreground">{user.email}</p>
+            <h1 className="text-3xl font-bold">{user.fullname || user.email}</h1>
+            <p className="text-muted-foreground">@{user.username}</p>
           </div>
-          {/* NEW: Huy hiệu đã xác thực */}
           {user.is_verified && (
             <Badge variant="secondary" className="border-green-300 bg-green-100 text-green-800">
               <CheckCircle className="w-4 h-4 mr-1" />
@@ -86,10 +64,10 @@ export default function ProfilePage() {
       </div>
 
       <Card>
-        <CardHeader>
+        {/* <CardHeader>
           <CardTitle>Thông tin chung</CardTitle>
           <CardDescription>Quản lý thông tin cá nhân và các tùy chọn của bạn.</CardDescription>
-        </CardHeader>
+        </CardHeader> */}
         {isEditing ? (
           <ProfileEditForm 
             user={user} 

@@ -5,7 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { Loader2, Download, PlusCircle } from 'lucide-react';
-import { ReactFlowProvider } from 'reactflow';
+// import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -13,9 +14,13 @@ import { useRef, useState } from 'react';
 
 import RoadmapFlowChart from '@/components/roadmap/RoadmapFlowChart';
 import RoadmapDetailView from '@/components/roadmap/RoadmapDetailView';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+
+import NodeDetailSheet from '@/components/roadmap/NodeDetailSheet'; // Import component mới
+
+
 
 // Hàm để fetch dữ liệu
 const fetchRoadmapById = async (id: string) => {
@@ -27,6 +32,7 @@ export default function RoadmapDetailPage() {
     const params = useParams();
     const router = useRouter();
     const id = params.id as string;
+    const [selectedNode, setSelectedNode] = useState<any | null>(null); // State để lưu node được chọn
 
     const printRef = useRef<HTMLDivElement>(null);
     const [isDownloading, setIsDownloading] = useState(false);
@@ -69,6 +75,25 @@ export default function RoadmapDetailPage() {
         }
     };
 
+    // Hàm xử lý khi một node được click
+    const handleNodeClick = (nodeData: any) => {
+        let fullNodeData = { ...nodeData };
+
+        // Nếu node được click là một "giai đoạn" (phase), nó sẽ có thuộc tính 'topics'.
+        // Chúng ta sẽ tìm mô tả chi tiết tương ứng từ 'reactFlowData'.
+        if (nodeData.topics && data?.reactFlowData?.nodes) {
+            const phaseFromApi = data.reactFlowData.nodes.find(
+                (apiNode: any) => apiNode.id === `phase${nodeData.phase}`
+            );
+
+            if (phaseFromApi && phaseFromApi.data.description) {
+                fullNodeData.description = phaseFromApi.data.description;
+            }
+        }
+
+        setSelectedNode(fullNodeData);
+    };
+    
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -121,17 +146,24 @@ export default function RoadmapDetailPage() {
                         <Card className="sticky top-20 shadow-soft">
                             <CardHeader>
                                 <CardTitle>Sơ đồ Lộ trình</CardTitle>
+                                <CardDescription>Bấm vào để xem chi tiết</CardDescription>
                             </CardHeader>
                             <CardContent className="h-[600px]">
                                 <ReactFlowProvider>
-                                    {/* <RoadmapFlowChart nodes={reactFlowData.nodes} edges={reactFlowData.edges} /> */}
-                                    <RoadmapFlowChart roadmapDetails={roadmap_details} />
+                                    <RoadmapFlowChart roadmapDetails={roadmap_details} onNodeClick={handleNodeClick} />
                                 </ReactFlowProvider>
                             </CardContent>
                         </Card>
                     </div>
                 </div>
             </div>
+
+            <NodeDetailSheet
+                isOpen={!!selectedNode}
+                onClose={() => setSelectedNode(null)}
+                nodeData={selectedNode}
+            />
+
             <div className="absolute left-[-9999px]" ref={printRef}>
                 <div className="container mx-auto p-8 w-[1200px] bg-background">
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-5" >
@@ -149,7 +181,7 @@ export default function RoadmapDetailPage() {
                                 <CardContent className="h-[600px]">
                                     <ReactFlowProvider>
                                         {/* <RoadmapFlowChart nodes={reactFlowData.nodes} edges={reactFlowData.edges} /> */}
-                                        <RoadmapFlowChart roadmapDetails={roadmap_details} />
+                                        <RoadmapFlowChart roadmapDetails={roadmap_details} onNodeClick={handleNodeClick} />
                                     </ReactFlowProvider>
                                 </CardContent>
                             </Card>

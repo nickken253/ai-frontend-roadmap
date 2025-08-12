@@ -5,17 +5,20 @@ import { persist } from 'zustand/middleware';
 interface UserProfile {
     learning_style: string;
     weekly_goal: string;
-    preferred_languages: string[];
+    preferred_languages: string;
 }
 
 interface User {
     id: string;
+    fullname?: string;
+    username?: string;
     email: string;
-    name: string; 
+    avatar: string;
     role?: 'admin' | 'user';
+    googleId?: string;
+    githubId?: string;
     is_verified: boolean;
     is_active: boolean;
-    avatarUrl?: string; 
     profile: UserProfile;
     created_at: string;
 }
